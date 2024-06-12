@@ -1,12 +1,20 @@
+import Link from "next/link"
 import ModeToggler from "./modetoggler"
+import { buttonVariants } from "../ui/button"
+import { FaGithub } from "react-icons/fa6"
 
 function Navbar() {
   return (
-    <nav className="flex w-full justify-between">
-      <h1>LOGO</h1>
-      <div className="flex">
+    <nav className="flex-none flex w-full justify-between items-center px-10 py-8">
+      <h1 className="text-2xl font-semibold tracking-wide">FileConv</h1>
+      <div className="flex items-center gap-4">
         <ModeToggler />
-        <h1>Repo</h1>
+        <Link 
+          className={buttonVariants({ variant: "ghost" })}
+          href="https://github.com/" 
+        >
+          <FaGithub size={28} />
+        </Link>
       </div>
     </nav>
   )

@@ -3,20 +3,22 @@
 import { useTheme } from "next-themes"
 import { Sun, Moon } from "lucide-react"
 import { Button } from "../ui/button"
+import useHasMounted from "@/utils/hooks/hasmounted"
 
 function ModeToggler() {
   const { theme, setTheme } = useTheme()
+  const hasMounted = useHasMounted()
 
   return (
     <>
       {
-        theme === "dark" ?
-        <Button variant="outline" size="icon" onClick={() => setTheme("light")}>
-          <Sun  size={20} />
+        hasMounted && theme === "dark" ?
+        <Button variant="ghost" size="icon" onClick={() => setTheme("light")}>
+          <Sun  size={28} />
         </Button> 
         : 
-        <Button variant="outline" size="icon" onClick={() => setTheme("dark")}>
-          <Moon size={20} />
+        <Button variant="ghost" size="icon" onClick={() => setTheme("dark")}>
+          <Moon size={28} />
         </Button>
       }
     </>

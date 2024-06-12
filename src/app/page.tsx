@@ -1,10 +1,13 @@
+import FileDropzone from "@/components/global/dropzone";
+import Hero from "@/components/global/hero";
 import Navbar from "@/components/global/navbar"
 
 export default function Home() {
   return (
-    <main className="w-screen">
+    <main className="w-dvh h-dvh flex flex-col">
       <Navbar />
-      <h1>Hello World</h1>
+      <Hero />
+      <FileDropzone />
     </main>
   );
 }

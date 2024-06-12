@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Montserrat } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/global/themeprovider";
 
-const inter = Inter({ subsets: ["latin"] });
+const montserrat = Montserrat({ subsets: ["latin"], weight : ["400", "500", "600", "700", "800"] });
 
 export const metadata: Metadata = {
-  title: "File Convertor",
+  title: "FileConv",
   description: "A SAAS web application capable of converting multiple files into a desired format for free.",
 };
 
@@ -17,7 +17,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body 
+        suppressHydrationWarning={true}
+        className={montserrat.className}
+      >
         <ThemeProvider
             attribute="class"
             defaultTheme="system"
