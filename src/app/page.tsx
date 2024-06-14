@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <main className="w-dvh h-dvh flex flex-col">
       <Navbar />
-      <Hero />
+      {/* <Hero /> */}
       <FileDropzone />
     </main>
   );

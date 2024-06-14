@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/global/themeprovider";
+import { Toaster } from "@/components/ui/toaster";
 
 const montserrat = Montserrat({ subsets: ["latin"], weight : ["400", "500", "600", "700", "800"] });
 
@@ -28,6 +29,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
           {children}
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

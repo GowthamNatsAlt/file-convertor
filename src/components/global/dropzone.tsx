@@ -1,51 +1,77 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import Dropzone from 'react-dropzone'
 import { ScrollArea } from "@/components/ui/scroll-area"
 import FileBox from './filebox';
 import { Button } from '../ui/button';
-import { Trash } from 'lucide-react';
+import { ArrowRightLeft, Trash } from 'lucide-react';
+import { toast } from '../ui/use-toast';
+import { accepted_files } from '@/utils/constants/constants';
 
 function FileDropzone() {
-  const [files, setFiles] = useState<Array<any>>([]);
+  const [files, setFiles] = useState<Array<any>>([])
 
-  const onDrop = (acceptedFiles: Array<any>) => {
-    setFiles(acceptedFiles)
+  const onDrop = async (acceptedFiles: Array<any>) => {
+    setFiles((prevFiles) => [...prevFiles, ...acceptedFiles])
   }
 
   return (
-    <div className='flex-1 px-16 py-5 pb-16 overflow-hidden gap-4'>
+    <div className='flex-1 px-16 py-5 gap-4'>
+      <Dropzone 
+        onDrop={onDrop}
+        accept={ accepted_files }
+        onError={() => {
+          toast({
+            variant: "destructive",
+            title: "Error uploading your file(s)",
+            description: "Only audios, videos and images are allowed.",
+            duration: 2000
+          })
+        }}
+        onDropRejected={() => {
+          toast({
+            variant: "destructive",
+            title: "Error uploading your file(s)",
+            description: "Only audios, videos and images are allowed.",
+            duration: 2000
+          })
+        }}
+      >
+        {({getRootProps, getInputProps}) => (
+          <section>
+            <div {...getRootProps({
+              className: 'h-[250px] w-full border-4 border-dashed border p-4 rounded-md flex items-center justify-center'
+            })}>
+              <input {...getInputProps()} />
+              <p className='text-xl text-center'>Drag & drop some files here, or click to select files</p>
+            </div>
+          </section>
+        )}
+      </Dropzone>
+      
       {
-        files.length == 0 ? (
-          <Dropzone 
-            onDrop={onDrop}
-          >
-            {({getRootProps, getInputProps}) => (
-              <section>
-                <div {...getRootProps({
-                  className: 'h-[250px] w-full border-4 border-dashed border p-4 rounded-md flex items-center justify-center'
-                })}>
-                  <input {...getInputProps()} />
-                  <p className='text-xl text-center'>Drag & drop some files here, or click to select files</p>
-                </div>
-              </section>
-            )}
-          </Dropzone>
-        ) : (
-         <>
-          <div className='p-4 w-full flex flex-row justify-between items-center'>
-            <h1 className='text-2xl font-medium'>Uploaded files</h1>
-            <Button variant="ghost" onClick={() => setFiles([])}><Trash size={30} /></Button>
+        files.length !== 0 && (
+          <div className='h-2/3 overflow-hidden'>
+            <div className='p-4 w-full flex flex-row justify-between items-center'>
+              <h1 className='text-2xl font-medium'>Uploaded files</h1>
+              <div className='flex flex-row items-center'>
+                {
+                  files.length > 0 &&
+                  <Button variant="ghost" onClick={() => {}}><ArrowRightLeft size={30} /></Button>
+                }
+                <Button variant="ghost" onClick={() => setFiles([])}><Trash size={30} /></Button>
+              </div>
+            </div>
+            <ScrollArea className='flex flex-col h-4/5 p-4 rounded-md'>
+              {files.map((file, key) => (
+                <FileBox key={key} index={key} file={file} files={files} setFiles={setFiles} />
+              ))}
+            </ScrollArea>
           </div>
-          <ScrollArea className='flex flex-col h-4/5 gap-2 p-4 rounded-md'>
-            {files.map((file, key) => (
-              <FileBox key={key} index={key} file={file} />
-            ))}
-          </ScrollArea>
-         </>
         )
       }
+
     </div>
   )
 }
