@@ -8,18 +8,31 @@ import { Button } from '../ui/button';
 import { ArrowRightLeft, Trash } from 'lucide-react';
 import { toast } from '../ui/use-toast';
 import { accepted_files } from '@/utils/constants/constants';
+import { Files } from '@/utils/interfaces/file';
 
 function FileDropzone() {
-  const [files, setFiles] = useState<Array<any>>([])
+  const [files, setFiles] = useState<Files []>([])
 
   const onDrop = async (acceptedFiles: Array<any>) => {
-    setFiles((prevFiles) => [...prevFiles, ...acceptedFiles])
+     const newFiles = await Promise.all(
+      acceptedFiles.map(async (file) => {
+        return { 
+          value: file, 
+          conversion: ""
+        }
+      })
+    )
+    setFiles((prevFiles) => [...prevFiles, ...newFiles])
+  }
+
+  const handleConvert = async () => {
+    console.log(files)
   }
 
   return (
     <div className='flex-1 px-16 py-5 gap-4'>
       <Dropzone 
-        onDrop={onDrop}
+        onDrop={ onDrop }
         accept={ accepted_files }
         onError={() => {
           toast({
@@ -58,7 +71,7 @@ function FileDropzone() {
               <div className='flex flex-row items-center'>
                 {
                   files.length > 0 &&
-                  <Button variant="ghost" onClick={() => {}}><ArrowRightLeft size={30} /></Button>
+                  <Button variant="ghost" onClick={handleConvert}><ArrowRightLeft size={30} /></Button>
                 }
                 <Button variant="ghost" onClick={() => setFiles([])}><Trash size={30} /></Button>
               </div>
