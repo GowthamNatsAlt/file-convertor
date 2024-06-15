@@ -1,3 +1,5 @@
+'use client'
+
 import { X } from 'lucide-react';
 import {
   Select,
@@ -13,12 +15,11 @@ import { Button } from '../ui/button';
 import { Files } from '@/utils/interfaces/file';
 import { useToast } from '../ui/use-toast';
 
-
 function FileBox(
   { index, file, files, setFiles } : 
   { index: number, file: Files, files: Array<Files>, setFiles: Dispatch<SetStateAction<Array<any>>> }
 ) {
-
+  const { toast } = useToast()
   const fileType : string = file.value.type.substring(0, 5)
   const allowed_extensions : string[] = (
     fileType == "image" ? extensions.image : (fileType == "video" ? extensions.video : extensions.audio)
@@ -26,11 +27,19 @@ function FileBox(
 
   const handleSelect = (selectionValue : string) => {
     if (!allowed_extensions.includes(selectionValue)) {
-      console.log("error with ext")
+      toast({
+        title: "Invalid file type",
+        description: `${selectionValue} is not a valid extension for ${file.value.name}.`,
+        variant: 'destructive',
+      })
       return;
     }
 
-    const updatedFiles = files.map((f) => f.value === file.value ? { value: file.value, conversion: selectionValue } : f);
+    const updatedFiles = files.map((f) => f.value === file.value ? { 
+      value: file.value, 
+      conversion: selectionValue, 
+      status: file.status  
+    } : f);
     setFiles(updatedFiles)
   }
 
@@ -43,7 +52,9 @@ function FileBox(
       <div className='flex-1 flex md:flex-row md:justify-between flex-col gap-4'>
         <div className='flex-1 flex flex-row justify-between items-center'>
           <h1 className='truncate'>{file.value.name}</h1>
-          <Badge>Completed</Badge>
+          <Badge>
+            {file.status}
+          </Badge>
         </div>
         <div className='flex-none flex flex-row items-center gap-4'>
           <h1 className='opacity-50'>Convert to</h1>

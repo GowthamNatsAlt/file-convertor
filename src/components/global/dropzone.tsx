@@ -18,7 +18,8 @@ function FileDropzone() {
       acceptedFiles.map(async (file) => {
         return { 
           value: file, 
-          conversion: ""
+          conversion: "",
+          status: "Uploaded",
         }
       })
     )

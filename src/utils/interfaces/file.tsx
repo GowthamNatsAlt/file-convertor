@@ -1,4 +1,5 @@
 export interface Files {
   value: any,
-  conversion: string
+  conversion: string,
+  status: string
 }
