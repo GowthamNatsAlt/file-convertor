@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Dropzone from 'react-dropzone'
 import { ScrollArea } from "@/components/ui/scroll-area"
 import FileBox from './filebox';
@@ -9,9 +9,14 @@ import { ArrowRightLeft, Trash } from 'lucide-react';
 import { toast } from '../ui/use-toast';
 import { accepted_files } from '@/utils/constants/constants';
 import { Files } from '@/utils/interfaces/file';
+import convert from '@/utils/hooks/conversion';
+import { FFmpeg } from "@ffmpeg/ffmpeg";
+import loadFfmpeg from '@/utils/hooks/loadFFmpeg';
 
 function FileDropzone() {
   const [files, setFiles] = useState<Files []>([])
+  const [isLoaded,  setIsLoaded] = useState(false)
+  const ffmpegRef = useRef<any>(null)
 
   const onDrop = async (acceptedFiles: Array<any>) => {
      const newFiles = await Promise.all(
@@ -27,8 +32,56 @@ function FileDropzone() {
   }
 
   const handleConvert = async () => {
-    console.log(files)
+    if (!isLoaded) {
+      toast({
+        variant: "destructive",
+        title: "FFmpeg not loaded",
+        description: " Please wait for FFmpeg to load.",
+        duration: 2000
+      })
+      return
+    }
+    if (files.every(f => f.conversion === "")) {
+      toast({
+        variant: "destructive",
+        title: "Empty conversion format",
+        description: " Please select a conversion format for the files to be converted.",
+        duration: 2000
+      })
+      return
+    }
+
+    setFiles(files.map((f) => {
+      f.status = "Converting"
+      return f
+    }))
+
+    files.map(async f => {
+      await convert(ffmpegRef.current, f)
+        .then((value) => {
+          console.log(value)
+          let tempFiles = files 
+          tempFiles[files.indexOf(f)].status = "Done"
+          setFiles([...tempFiles])
+        })
+        .catch((err) => {
+          console.error(err)
+          let tempFiles = files 
+          tempFiles[files.indexOf(f)].status = "Error"
+          setFiles([...tempFiles])
+        })
+    })
   }
+
+  const load = async () => {
+    const ffmpeg_response: FFmpeg = await loadFfmpeg();
+    ffmpegRef.current = ffmpeg_response;
+    setIsLoaded(true);
+  };
+
+  useEffect(() => {
+    load();
+  }, []);
 
   return (
     <div className='flex-1 px-16 py-5 gap-4'>
