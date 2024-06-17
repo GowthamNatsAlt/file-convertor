@@ -66,7 +66,10 @@ export default async function convert (
   await ffmpeg.exec(ffmpeg_cmd);
 
   const data = (await ffmpeg.readFile(output)) as any;
-  const blob = new Blob([data], { type: file.value.type.split('/')[0] });
+  const blob = new Blob([data], { type: `${file.value.type.split('/')[0]}/${file.conversion}` });
   const url = URL.createObjectURL(blob);
-  return { url, output };
+  return { 
+    url, 
+    name: output 
+  };
 }
