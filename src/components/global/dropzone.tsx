@@ -14,6 +14,12 @@ import { FFmpeg } from "@ffmpeg/ffmpeg";
 import loadFfmpeg from '@/utils/hooks/loadFFmpeg';
 import { Blobs } from '@/utils/interfaces/blob';
 import JSZip from 'jszip';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 function FileDropzone() {
   const [files, setFiles] = useState<Files []>([])
@@ -146,7 +152,7 @@ const handleDownload = async () => {
   }, []);
 
   return (
-    <div className='px-4 md:px-16 py-5 gap-4 h-screen w-full lg:w-2/3'>
+    <div className='px-4 md:px-16 py-5 gap-4 h-full w-full lg:w-2/3'>
       <Dropzone 
         onDrop={ onDrop }
         accept={ accepted_files }
@@ -186,6 +192,7 @@ const handleDownload = async () => {
             <div className='p-4 w-full flex flex-row justify-between items-center'>
               <h1 className='text-lg sm:text-xl md:text-2xl font-medium'>Uploaded files</h1>
               <div className='flex flex-row items-center'>
+
                   <Button
                     disabled={!(files.length > 0 && !isConverting)}
                     className='disabled:opacity-50'
@@ -193,6 +200,7 @@ const handleDownload = async () => {
                     onClick={handleConvert}>
                     <ArrowRightLeft size={30} />
                   </Button>
+                  
                   <Button 
                     disabled={!(blobs.length > 0 && !isConverting)}
                     className='disabled:opacity-50'
@@ -200,6 +208,7 @@ const handleDownload = async () => {
                     onClick={handleDownload}>
                       <ArrowDown size={30} />
                   </Button>
+                  
                 <Button variant="ghost" onClick={() => setFiles([])}><Trash size={30} /></Button>
               </div>
             </div>

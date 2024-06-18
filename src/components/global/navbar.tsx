@@ -11,7 +11,7 @@ function Navbar() {
         <ModeToggler />
         <Link 
           className={buttonVariants({ variant: "ghost" })}
-          href="https://github.com/" 
+          href="https://github.com/GowthamNatsAlt/file-convertor" 
         >
           <FaGithub size={28} />
         </Link>
