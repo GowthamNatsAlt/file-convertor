@@ -80,7 +80,6 @@ function FileDropzone() {
           setFiles([...tempFiles])
         })
         .catch((err) => {
-          console.error(err)
           let tempFiles = files 
           tempFiles[files.indexOf(f)].status = "Error"
           setFiles([...tempFiles])
@@ -147,10 +146,11 @@ const handleDownload = async () => {
   }, []);
 
   return (
-    <div className='flex-1 px-16 py-5 gap-4'>
+    <div className='px-4 md:px-16 py-5 gap-4 h-screen w-full lg:w-2/3'>
       <Dropzone 
         onDrop={ onDrop }
         accept={ accepted_files }
+        disabled={isConverting}
         onError={() => {
           toast({
             variant: "destructive",
@@ -174,7 +174,7 @@ const handleDownload = async () => {
               className: 'h-[250px] w-full border-4 border-dashed border p-4 rounded-md flex items-center justify-center'
             })}>
               <input {...getInputProps()} />
-              <p className='text-xl text-center'>Drag & drop some files here, or click to select files</p>
+              <p className={`text-xl text-center ${isConverting && "opacity-50"}`}>Drag & drop some files here, or click to select files</p>
             </div>
           </section>
         )}
@@ -184,7 +184,7 @@ const handleDownload = async () => {
         files.length !== 0 && (
           <div className='h-2/3 overflow-hidden'>
             <div className='p-4 w-full flex flex-row justify-between items-center'>
-              <h1 className='text-2xl font-medium'>Uploaded files</h1>
+              <h1 className='text-lg sm:text-xl md:text-2xl font-medium'>Uploaded files</h1>
               <div className='flex flex-row items-center'>
                   <Button
                     disabled={!(files.length > 0 && !isConverting)}
@@ -203,7 +203,10 @@ const handleDownload = async () => {
                 <Button variant="ghost" onClick={() => setFiles([])}><Trash size={30} /></Button>
               </div>
             </div>
-            <ScrollArea className='flex flex-col h-4/5 p-4 rounded-md'>
+            <ScrollArea 
+              className='flex flex-col h-4/5 p-4 rounded-md'
+              type="always"
+            >
               {files.map((file, key) => (
                 <FileBox key={key} index={key} file={file} files={files} setFiles={setFiles} />
               ))}

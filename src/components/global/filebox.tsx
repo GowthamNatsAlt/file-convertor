@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Badge } from "@/components/ui/badge"
+import { Badge, badgeVariants } from "@/components/ui/badge"
 import { extensions } from '@/utils/constants/constants';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { Button } from '../ui/button';
@@ -51,13 +51,15 @@ function FileBox(
     >
       <div className='flex-1 flex md:flex-row md:justify-between flex-col gap-4'>
         <div className='flex-1 flex flex-row justify-between items-center'>
-          <h1 className='truncate'>{file.value.name}</h1>
-          <Badge>
+          <h1 className='text-sm md:text-md'>{file.value.name}</h1>
+          <Badge
+            variant={ file.status === "Done" ? 'success' : file.status === "Error" ? 'failure' : 'secondary'}
+          >
             {file.status}
           </Badge>
         </div>
-        <div className='flex-none flex flex-row items-center gap-4'>
-          <h1 className='opacity-50'>Convert to</h1>
+        <div className='flex-none flex flex-row justify-between items-center gap-4'>
+          <h1 className='opacity-50 text-sm md:text-md'>Convert to</h1>
           <Select
             onValueChange={handleSelect}
             value={ file.conversion !== "" ?  file.conversion : "" }

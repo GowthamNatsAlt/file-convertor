@@ -4,10 +4,12 @@ import Navbar from "@/components/global/navbar"
 
 export default function Home() {
   return (
-    <main className="w-dvh h-dvh flex flex-col">
+    <main className="flex flex-col">
       <Navbar />
       {/* <Hero /> */}
-      <FileDropzone />
+      <div className="flex flex-col items-center w-full h-full">
+        <FileDropzone />
+      </div>
     </main>
   );
 }
